@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build the Docker image
+        run : docker build . --file Dockerfile --tag pico-mruby-dev
+
+      - name: Build pico-mruby
+        run: docker run --mount type=bind, source=$(pwd)/,target=/work pico-mruby-dev /bin/bash -c "mkdir build; cd build; cmake ..; cmake --build .;"
+
+      - name: Archive
+        run: |
+          mkdir binary
+          cp build/src/pico_mruby/pico-mruby.uf2 binary
+          zip -j -r ${{ github.event.repository.name }}_${{ github.ref }} binary
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ setp.create_release.outputs.upload_url }}
+          asset_path: ./${{ github.event.reposigory.name }}_${ github.ref }}.zip
+          asset_name: ${{ github.event.reposigory.name }}_${ github.ref }}.zip
+          assert_content_type: application/zip
