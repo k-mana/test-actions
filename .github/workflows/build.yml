@@ -32,7 +32,7 @@ jobs:
           zip -j -r ${{ steps.version.outputs.filename }}.zip binary
 
       - name: Upload artifact
-      - uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.version.outputs.filename }}.zip
           path: ./${{ steps.version.outputs.filename }}.zip
