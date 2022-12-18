@@ -11,9 +11,7 @@ jobs:
         id: version
         run: |
           REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
-          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "filename=$REPOSITORY-$VERSION" >> $GITHUB_OUTPUT
+          echo "filename=$REPOSITORY" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
         with:
