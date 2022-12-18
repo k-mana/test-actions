@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set version
+        id: version
+        run: |
+          REPOSITORY=$(echo ${{ github.repository }} | sed-e "s#.*/##")
+          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          echo ::set-output name=version::$VERSION
+          echo ::set-output name=filename::$REPOSITORY-$VERSION
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -25,7 +32,7 @@ jobs:
         run: |
           mkdir binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
-          zip -j -r ${{ github.event.repository.name }}_${{ github.ref }} binary
+          zip -j -r ${{ steps.version.outputs.filename }} binary
 
       - name: Create Release
         id: create_release
@@ -45,6 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.reposigory.name }}_${ github.ref }}.zip
-          asset_name: ${{ github.event.reposigory.name }}_${ github.ref }}.zip
+          asset_path: ./${{ steps.version.outputs.filename }}.zip
+          asset_name: ${{ steps.version.outputs.filename }}.zip
           assert_content_type: application/zip
