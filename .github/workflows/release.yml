@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
-          zip -j -r ${{ steps.version.outputs.filename }} binary
+          zip -j -r ${{ steps.version.outputs.filename }}.zip binary
           ls
 
       - name: Create Release
