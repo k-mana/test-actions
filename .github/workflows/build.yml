@@ -7,8 +7,6 @@ on:
     tags-ignore:
       - '[0-9]+.[0-9]+.[0-9]+'
   pull_request:
-
-on:
   scedule:
     - cron: "0 0 * * *"
       
