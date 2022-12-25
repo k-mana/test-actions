@@ -16,7 +16,7 @@ jobs:
       - name: Set version
         id: version
         run: |
-          REPOSITORY=echo ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+          REPOSITORY=$(echo "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}")
           echo "filename=$REPOSITORY" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
