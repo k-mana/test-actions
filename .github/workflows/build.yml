@@ -7,8 +7,6 @@ on:
     tags-ignore:
       - '[0-9]+.[0-9]+.[0-9]+'
   pull_request:
-  schedule:
-    - cron: "0 0 * * *"
       
 jobs:
   build:
@@ -18,7 +16,7 @@ jobs:
       - name: Set version
         id: version
         run: |
-          REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
+          REPOSITORY=echo ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
           echo "filename=$REPOSITORY" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v3
@@ -29,7 +27,7 @@ jobs:
         run: docker build . --file Dockerfile --tag pico-mruby-dev
 
       - name: Build pico-mruby
-        run: docker run --mount type=bind,source=$(pwd)/,target=/work pico-mruby-dev /bin/bash -c "mkdir build; cd build; cmake ..; cmake --build .;"
+        run: docker run --mount type=bind,source=$(pwd)/,target=/work pico-mruby-dev /bin/bash -c "cmake -S . -B build && cmake --build build"
 
       - name: Archive
         run: |
@@ -41,4 +39,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ steps.version.outputs.filename }}.zip
-          path: ./${{ steps.version.outputs.filename }}.zip
+          path: |
+            ${GITHUB_WORKSPACE}/build/src/hello_world/hello_world.uf2
+            ${GITHUB_WORKSPACE}/build/src/pico_mirb/pico-mirb.uf2
+            ${GITHUB_WORKSPACE}/build/src/pico_mruby/pico-mruby.uf2
