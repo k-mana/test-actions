@@ -40,6 +40,6 @@ jobs:
         with:
           name: ${{ steps.version.outputs.filename }}.zip
           path: |
-            ${GITHUB_WORKSPACE}/build/src/hello_world/hello_world.uf2
-            ${GITHUB_WORKSPACE}/build/src/pico_mirb/pico-mirb.uf2
-            ${GITHUB_WORKSPACE}/build/src/pico_mruby/pico-mruby.uf2
+            build/src/hello_world/hello_world.uf2
+            build/src/pico_mirb/pico-mirb.uf2
+            build/src/pico_mruby/pico-mruby.uf2
