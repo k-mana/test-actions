@@ -13,13 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set version
-        id: version
-        run: |
-          REPOSITORY=$(echo "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}")
-          echo "filename=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_OUTPUT
-
-      - uses: actions/checkout@v3
+      - name: Checkout repository code
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -32,7 +27,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ steps.version.outputs.filename }}.zip
+          name: ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}.zip
           path: |
             build/src/hello_world/hello_world.uf2
             build/src/pico_mirb/pico-mirb.uf2

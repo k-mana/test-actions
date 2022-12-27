@@ -14,7 +14,7 @@ jobs:
         id: version
         run: |
           REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
-          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          VERSION=echo ${GITHUB_REF##*/}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "filename=$REPOSITORY-$VERSION" >> $GITHUB_OUTPUT
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
         run : docker build . --file Dockerfile --tag pico-mruby-dev
 
       - name: Build pico-mruby
-        run: docker run --mount type=bind,source=$(pwd)/,target=/work pico-mruby-dev /bin/bash -c "mkdir build; cd build; cmake ..; cmake --build .;"
+        run: docker run --mount type=bind,source=$(pwd)/,target=/work pico-mruby-dev
 
       - name: Archive
         run: |
