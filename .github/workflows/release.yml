@@ -14,7 +14,7 @@ jobs:
         id: version
         run: |
           REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
-          VERSION=echo ${GITHUB_REF##*/}
+          VERSION=$(echo ${{ github.ref_name }})
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "filename=$REPOSITORY-$VERSION" >> $GITHUB_OUTPUT
       - name: Checkout code
@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
-          zip -j -r ${{ steps.version.outputs.filename }}.zip binary
+          zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip binary
 
       - name: Create Release
         id: create_release
@@ -52,6 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.version.outputs.filename }}.zip
-          asset_name: ${{ steps.version.outputs.filename }}.zip
+          asset_path: ./${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip
           asset_content_type: application/zip
