@@ -22,7 +22,7 @@ jobs:
         run: docker build . --file Dockerfile --tag pico-mruby-dev
 
       - name: Build pico-mruby
-        run: docker run --mount type=bind,source=$(pwd)/,target=/work pico-mruby-dev
+        run: docker run --mount type=bind,source="$(pwd)"/,target=/work pico-mruby-dev /bin/bash -c "cmake -G Ninja -B build && cmake --build build"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
