@@ -24,7 +24,7 @@ jobs:
       - name: Archive
         run: |
           mkdir binary
-          cp build/src/pico_mruby/pico-mruby.uf2 binary
+          cp build/src/hello_world/hello_world.uf2 binary
           cp build/src/pico_mirb/pico-mirb.uf2 binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
           zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip binary
