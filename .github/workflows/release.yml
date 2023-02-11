@@ -27,7 +27,7 @@ jobs:
           cp build/src/hello_world/hello_world.uf2 binary
           cp build/src/pico_mirb/pico-mirb.uf2 binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
-          zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip binary
+          zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip binary
 
       - name: Create Release
         id: create_release
@@ -47,6 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}-${{ github.ref_name }}.zip
-          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+          asset_path: ./${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip
+          asset_name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip
           asset_content_type: application/zip
