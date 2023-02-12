@@ -33,7 +33,7 @@ jobs:
 
       - name: diff
         if: ${{ github.event_name == 'pull_request' }}
-        run: git diff --name-only origin/${GITHUB_BASE_REF} --
+        run: git diff --name-only ${{ github.event.pull_request.base.sha }} --
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
