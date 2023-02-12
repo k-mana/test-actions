@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: pre-Checkout code
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          submodules: recursive
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -37,10 +44,3 @@ jobs:
             build/src/hello_world/hello_world.uf2
             build/src/pico_mirb/pico-mirb.uf2
             build/src/pico_mruby/pico-mruby.uf2
-
-  diff:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
-    steps:
-      - name: diff
-        run: git diff --name-only origin/${GITHUB_BASE_REF} --
