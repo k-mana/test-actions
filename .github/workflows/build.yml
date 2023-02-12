@@ -36,3 +36,9 @@ jobs:
             build/src/hello_world/hello_world.uf2
             build/src/pico_mirb/pico-mirb.uf2
             build/src/pico_mruby/pico-mruby.uf2
+
+
+    if: github.event.pull_request.merged == true
+    diff:
+      - name: diff
+        run: git diff --name-only origin/${GITHUB_BASE_REF} --
