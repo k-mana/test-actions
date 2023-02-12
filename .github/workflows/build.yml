@@ -35,5 +35,6 @@ jobs:
 
   diff:
     if: github.event.pull_request.merged == true
+    steps:
       - name: diff
         run: git diff --name-only origin/${GITHUB_BASE_REF} --
