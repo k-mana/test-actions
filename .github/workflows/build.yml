@@ -34,6 +34,7 @@ jobs:
             build/src/pico_mruby/pico-mruby.uf2
 
   diff:
+    runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
       - name: diff
