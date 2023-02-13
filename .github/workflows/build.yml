@@ -3,7 +3,7 @@ name: Build
 on: 
   push:
     branches:
-      - '**'
+      - main
     tags-ignore:
       - '**'
   pull_request:
@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: pre-Checkout code
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.base.sha }}
-          submodules: recursive
-
       - name: Checkout code
         uses: actions/checkout@v3
         with:
@@ -30,10 +23,6 @@ jobs:
 
       - name: Build pico-mruby
         run: docker run --mount type=bind,source="$(pwd)"/,target=/work pico-mruby-dev /bin/bash -c "cmake -G Ninja -B build && cmake --build build"
-
-      - name: diff
-        if: ${{ github.event_name == 'pull_request' }}
-        run: git diff --name-only ${{ github.event.pull_request.base.sha }} --
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
