@@ -27,13 +27,24 @@ jobs:
           cp build/src/hello_world/hello_world.uf2 binary
           cp build/src/pico_mirb/pico-mirb.uf2 binary
           cp build/src/pico_mruby/pico-mruby.uf2 binary
-          zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip binary
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
+          path: binary
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
+          path: .
+
       - name: Create Release
         id: create_release
         env:
