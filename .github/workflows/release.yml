@@ -43,7 +43,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
-          path: .
+
+        run: ls -R
 
       - name: Create Release
         id: create_release
