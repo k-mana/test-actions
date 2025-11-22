@@ -23,16 +23,18 @@ jobs:
 
       - name: Archive
         run: |
-          mkdir binary
-          cp build/src/hello_world/hello_world.uf2 binary
-          cp build/src/pico_mirb/pico-mirb.uf2 binary
-          cp build/src/pico_mruby/pico-mruby.uf2 binary
+          mkdir -p ${{ github.workspace }}/artifact/hello_world2
+          cp build/src/hello_world/hello_world.uf2 ${{ github.workspace }}/artifact/hello_world2
+          mkdir -p ${{ github.workspace }}/artifact/pico_mirb
+          cp build/src/pico_mirb/pico-mirb.uf2 ${{ github.workspace }}/artifact/pico_mirb
+          mkdir -p ${{ github.workspace }}/artifact/pico_mruby
+          cp build/src/pico_mruby/pico-mruby.uf2 ${{ github.workspace }}/artifact/pico_mruby
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
-          path: binary
+          name: ${{ github.event.repository.name }}-binary
+          path: ${{ github.workspace }}/artifact
 
   release:
     needs: build
@@ -42,7 +44,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v5
         with:
-          name: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
+          name: ${{ github.event.repository.name }}-binary
+          path: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
 
       - name: Display
         run: ls -R
