@@ -51,4 +51,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{github.ref_name }} \
-            ./${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip
+            ./${{ github.event.repository.name }}-${{ github.ref_name }}-binary
