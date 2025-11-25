@@ -6,7 +6,7 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-  build:
+  build_and_releae:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,37 +23,17 @@ jobs:
 
       - name: Archive
         run: |
-          mkdir -p ${{ github.workspace }}/artifact/hello_world2
-          cp build/src/hello_world/hello_world.uf2 ${{ github.workspace }}/artifact/hello_world2
-          mkdir -p ${{ github.workspace }}/artifact/pico_mirb
-          cp build/src/pico_mirb/pico-mirb.uf2 ${{ github.workspace }}/artifact/pico_mirb
-          mkdir -p ${{ github.workspace }}/artifact/pico_mruby
-          cp build/src/pico_mruby/pico-mruby.uf2 ${{ github.workspace }}/artifact/pico_mruby
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-binary
-          path: ${{ github.workspace }}/artifact
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: ${{ github.event.repository.name }}-binary
-          path: ${{ github.event.repository.name }}-${{ github.ref_name }}-binary
-
-      - name: Display
-        run: ls -R
+          mkdir -p ${{ github.workspace }}/binary/hello_world2
+          cp build/src/hello_world/hello_world.uf2 ${{ github.workspace }}/binary/hello_world2
+          mkdir -p ${{ github.workspace }}/binary/pico_mirb
+          cp build/src/pico_mirb/pico-mirb.uf2 ${{ github.workspace }}/binary/pico_mirb
+          mkdir -p ${{ github.workspace }}/binary/pico_mruby
+          cp build/src/pico_mruby/pico-mruby.uf2 ${{ github.workspace }}/binary/pico_mruby
+          zip -j -r ${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip ${{ github.workspace }}/binary
 
       - name: Create Release
-        id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{github.ref_name }} \
-            ./${{ github.event.repository.name }}-${{ github.ref_name }}-binary
+            ./${{ github.event.repository.name }}-${{ github.ref_name }}-binary.zip
